@@ -7,6 +7,7 @@ A simple Chrome extension to quickly clear cookies and local storage for the cur
 *   **One-Click Clearing:** Click the extension icon to instantly remove cookies and local storage data associated with the website in the active tab.
 *   **Automatic Reload:** After clearing the data, the extension automatically reloads the page.
 *   **Notification:** Displays a notification confirming that the data has been cleared for the specific site origin.
+*   **Incognito Mode Support:** Works in Incognito windows (requires enabling in extension settings).
 
 ## How it Works
 
@@ -15,10 +16,7 @@ The extension listens for clicks on its action icon. When clicked, it identifies
 ## Permissions Used
 
 *   `browsingData`: To clear site data (cookies, local storage).
-*   `cookies`: Required by `browsingData` to clear cookies.
-*   `scripting`: Although listed, it might not be strictly necessary for the current background script functionality. It's often needed for content scripts or programmatic injection.
 *   `tabs`: To get information about the active tab (URL, ID) and reload it.
-*   `activeTab`: Grants temporary access to the active tab when the user invokes the extension.
 *   `notifications`: To display a confirmation message after clearing data.
 *   `host_permissions` (`<all_urls>`): Necessary for the `browsingData` API to clear data on any website origin.
 
@@ -30,3 +28,4 @@ The extension listens for clicks on its action icon. When clicked, it identifies
 4.  Click the "Load unpacked" button.
 5.  Select the directory containing the extension's files (`manifest.json`, `background.js`, etc.).
 6.  The "Clear Site Data" extension icon should appear in your Chrome toolbar.
+7.  **(Optional) To use in Incognito mode:** Go to `chrome://extensions/`, find "Clear Site Data", click "Details", and enable "Allow in Incognito".
