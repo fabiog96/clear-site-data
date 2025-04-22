@@ -24,18 +24,18 @@ chrome.action.onClicked.addListener(async() => {
         // Reload the current tab to reflect the changes
         chrome.tabs.reload(tab.id);
         // Optionally, you can create a notification to inform the user
-        createNotification(origin);
+        createNotification("Clear Site Data",`Cookie e localStorage removed for: \n${url}`);
         console.log(`Browsing data cleared for origin: ${origin}`);
     });
 })
 
 
 // Function to create a notification
-function createNotification(url){
+function createNotification(title,message){
     chrome.notifications.create({
         type: 'basic',
         iconUrl:'icons/icon.png',
-        title: 'Cleared data',
-        message: `Cookie e localStorage removed for: \n${url}`
+        title: title,
+        message: message
     });
 }
