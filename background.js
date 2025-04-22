@@ -24,7 +24,7 @@ chrome.action.onClicked.addListener(async() => {
         // Reload the current tab to reflect the changes
         chrome.tabs.reload(tab.id);
         // Optionally, you can create a notification to inform the user
-        createNotification("Clear Site Data",`Cookie e localStorage removed for: \n${url}`);
+        createNotification("Clear Site Data",`Cookie e localStorage removed for: \n${origin}`);
         console.log(`Browsing data cleared for origin: ${origin}`);
     });
 })
