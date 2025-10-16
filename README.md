@@ -6,12 +6,11 @@ A simple Chrome extension to quickly clear cookies and local storage for the cur
 
 *   **One-Click Clearing:** Click the extension icon to instantly remove cookies and local storage data associated with the website in the active tab.
 *   **Automatic Reload:** After clearing the data, the extension automatically reloads the page.
-*   **Notification:** Displays a notification confirming that the data has been cleared for the specific site origin.
 *   **Incognito Mode Support:** Works in Incognito windows (requires enabling in extension settings).
 
 ## How it Works
 
-The extension listens for clicks on its action icon. When clicked, it identifies the active tab's URL, extracts the origin (e.g., `https://www.example.com`), and then uses the `chrome.browsingData` API to remove cookies and local storage specifically for that origin. Finally, it reloads the tab using `chrome.tabs.reload` and shows a confirmation notification using `chrome.notifications`.
+The extension listens for clicks on its action icon. When clicked, it identifies the active tab's URL, extracts the origin (e.g., `https://www.example.com`), and then uses the `chrome.browsingData` API to remove cookies and local storage specifically for that origin. Finally, it reloads the tab using `chrome.tabs.reload`.
 
 ## Permissions Used
 
