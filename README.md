@@ -43,9 +43,6 @@ The extension requires the following permissions to function correctly:
 - **`browsingData`**  
   Required to clear cookies and local storage data for the selected website.
 
-- **`cookies`**  
-  Required to remove cookies associated with the current website.
-
 - **`tabs`**  
   Required to identify the active tab and reload it after clearing site data.
 
@@ -54,9 +51,6 @@ The extension requires the following permissions to function correctly:
 
 - **`notifications`**  
   Used only to display a local confirmation message after the operation is completed.
-
-- **`host_permissions` (`<all_urls>`)**  
-  Required to allow the extension to clear site data for any website chosen by the user.
 
 No data is read, stored, or transmitted outside the browser.
 
