@@ -24,8 +24,6 @@ jobs:
       # 1. Increment the version in manifest.json (Patch by default)
       - name: Bump manifest version
         id: bump_version
-        - name: Bump manifest version
-        id: bump_version
         run: |
           # Read the current version from manifest.json
           current_version=$(jq -r '.version' manifest.json)
