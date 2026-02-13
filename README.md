@@ -1,12 +1,16 @@
-# Clear Site Data Chrome Extension
 
+# Clear Site Data Chrome Extension 
+<p align="center">
+  <img src="./icons/icon.png" alt="Clear Site Data Logo"/>
+</p>
 
 Clear Site Data is a simple and lightweight Chrome extension that allows you to quickly clear cookies and local storage for the currently active website with a single click.
 
 The extension operates entirely locally in the browser and does not collect or transmit any user data.
 
 ---
-
+### Link Chrome Web Store: [Clear Site Data](https://chromewebstore.google.com/detail/ehdbjikpoiadepodjjnjbjppaphdflng?utm_source=item-share-cb)
+---
 ## Features
 
 - **One-Click Clearing**  
