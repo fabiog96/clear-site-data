@@ -1,0 +1,38 @@
+name: extension-packager-publisher
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'CHANGELOG.md' # Si attiva quando il merge della PR aggiorna il changelog
+
+jobs:
+  publish:
+    # IMPORTANT: Only run this if the last commit is a release merge
+    if: startsWith(github.event.head_commit.message, 'chore(main): release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get version
+        id: vars
+        run: echo "version=$(jq -r .version manifest.json)" >> $GITHUB_OUTPUT
+
+      - name: Create Zip
+        run: |
+          # Define the name of the zip file using the version obtained from the previous step
+          NAME="clear-site-data-v${{ steps.vars.outputs.version }}.zip"
+          
+          # Create the zip using that variable
+          zip -r "$NAME" . -x "*.git*" ".github*" "README.md" ".gitignore" "release-please-*"
+          
+          # Pass the name to the next step via GitHub output
+          echo "zip_name=$NAME" >> $GITHUB_OUTPUT
+        id: build_zip
+
+      - name: Update GitHub Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use the name saved in the previous step
+          gh release upload v${{ steps.vars.outputs.version }} "${{ steps.build_zip.outputs.zip_name }}"
