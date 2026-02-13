@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.2.0...clear-site-data-v1.2.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* add missing quotes in conditional for release merge check ([d2b7854](https://github.com/fabiog96/clear-site-data/commit/d2b7854d8079679cc2ce9fb4c244e5ab91b867be))
+
 ## [1.2.0](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.1.2...clear-site-data-v1.2.0) (2026-02-13)
 
 
