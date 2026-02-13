@@ -2,7 +2,7 @@
   "packages": {
     ".": {
       "package-name": "clear-site-data",
-      "release-type": "node",
+      "release-type": "simple",
       "changelog-path": "CHANGELOG.md"
     }
   }
