@@ -1,0 +1,69 @@
+name: Auto Version & Release Extension
+
+on:
+  push:
+    branches:
+      - main
+    # Avoid infinite loops when the action itself makes the commit
+    paths-ignore:
+      - 'manifest.json'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 1. Increment the version in manifest.json (Patch by default)
+      - name: Bump manifest version
+        id: bump_version
+        - name: Bump manifest version
+        id: bump_version
+        run: |
+          # Read the current version from manifest.json
+          current_version=$(jq -r '.version' manifest.json)
+          echo "Current version: $current_version"
+          
+          # If the version has only two digits (e.g., 1.1), convert it to 1.1.0 before proceeding
+          if [[ $current_version =~ ^[0-9]+\.[0-9]+$ ]]; then
+            current_version="${current_version}.0"
+          fi
+
+          # Increment the last digit (e.g., 1.1.0 -> 1.1.1)
+          new_version=$(echo $current_version | awk -F. '{$NF = $NF + 1;} 1' OFS=.)
+          
+          echo "New version: $new_version"
+          echo "new_tag=v$new_version" >> $GITHUB_OUTPUT
+          
+          # Update the manifest.json
+          jq ".version = \"$new_version\"" manifest.json > manifest.tmp && mv manifest.tmp manifest.json
+
+      # 2. Save the changes to the repository
+      - name: Commit & Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add manifest.json
+          git commit -m "chore: bump version to ${{ steps.bump_version.outputs.new_tag }} [skip ci]"
+          git push
+
+      # 3. Create the ZIP (excluding unnecessary files)
+      - name: Zip extension
+        run: zip -r extension.zip . -x "*.git*" ".github*" "README.md" ".gitignore"
+
+      # 4. Create the official GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.bump_version.outputs.new_tag }}
+          name: Release ${{ steps.bump_version.outputs.new_tag }}
+          files: extension.zip
+          generate_release_notes: true
+          body: "New version of the extension ready for upload."
