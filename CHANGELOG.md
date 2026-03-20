@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.3.0...clear-site-data-v1.4.0) (2026-03-20)
+
+
+### Features
+
+* Add landing page HTML and assets ([b4f7487](https://github.com/fabiog96/clear-site-data/commit/b4f7487f6878716c051a89f819d0159644e54fd0))
+
 ## [1.3.0](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.2.1...clear-site-data-v1.3.0) (2026-03-20)
 
 
