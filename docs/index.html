@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Site Data — One-Click Privacy for Chrome</title>
+  <meta name="description" content="Instantly clear cookies and local storage for any website with a single click. Zero tracking. Zero config.">
+
+  <link rel="icon" type="image/png" href="../icons/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Surface — teal-blue gradient */
+      --bg-top: #0c1c2b;
+      --bg-mid: #112d3d;
+      --bg-bottom: #163a4a;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-card-hover: rgba(255, 255, 255, 0.07);
+      --bg-glass: rgba(12, 28, 43, 0.8);
+
+      /* Text */
+      --ink: #e8f0f4;
+      --ink-soft: #8da5b4;
+      --ink-muted: #4e6a7a;
+
+      /* Cookie */
+      --cookie: #d4a06a;
+      --cookie-light: #e8c49a;
+      --cookie-glow: rgba(212, 160, 106, 0.1);
+
+      /* Blue (Broom) */
+      --blue: #6eb8e0;
+      --blue-light: #9ad0ee;
+      --blue-glow: rgba(110, 184, 224, 0.08);
+
+      /* Misc */
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --radius: 14px;
+
+      /* Type */
+      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--bg-top);
+      background: linear-gradient(175deg, var(--bg-top) 0%, var(--bg-mid) 40%, var(--bg-bottom) 100%);
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    ::selection {
+      background: rgba(110, 184, 224, 0.25);
+      color: var(--ink);
+    }
+
+    /* ─── Grain Overlay ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    /* ─── Scroll Reveal ─── */
+    .r {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .r.v { opacity: 1; transform: none; }
+
+    /* ─── Layout ─── */
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .divider {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 0;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(16px) saturate(1.6);
+      -webkit-backdrop-filter: blur(16px) saturate(1.6);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .nav-logo img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-logo span {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--ink); }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      color: var(--bg-top);
+      background: var(--ink);
+      padding: 0.45rem 1.1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .nav-btn:hover { opacity: 0.85; }
+
+    .chrome-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      position: relative;
+    }
+
+    .hero-icon-wrap {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .hero-icon {
+      width: 88px;
+      height: 88px;
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.08),
+        0 8px 32px rgba(212, 160, 106, 0.15),
+        0 16px 48px rgba(110, 184, 224, 0.1);
+      animation: float 5s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Soft glow behind icon */
+    .hero-icon-wrap::before {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--cookie-glow) 0%, transparent 70%);
+      filter: blur(20px);
+      z-index: 0;
+    }
+
+    .hero-icon-wrap::after {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translateX(30px);
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--blue-glow) 0%, transparent 70%);
+      filter: blur(20px);
+      z-index: 0;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      max-width: 680px;
+    }
+
+    .hero h1 .hl-cookie {
+      color: var(--cookie-light);
+    }
+
+    .hero h1 .hl-blue {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      color: var(--blue-light);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 .hl-blue::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.04em;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cookie) 0%, var(--blue) 100%);
+      border-radius: 2px;
+      opacity: 0.6;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--ink-soft);
+      max-width: 460px;
+      margin-bottom: 2.5rem;
+      line-height: 1.65;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.95rem 2.2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px rgba(110, 184, 224, 0.15);
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 4rem;
+      color: var(--ink-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .dot--cookie { background: var(--cookie); }
+    .dot--blue { background: var(--blue); }
+
+    /* ─── How Section ─── */
+    .how {
+      padding: 6rem 0;
+    }
+
+    .how-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-muted);
+      margin-bottom: 3.5rem;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .step {
+      background: var(--bg-card);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: background 0.3s;
+      backdrop-filter: blur(8px);
+    }
+
+    .step:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    .step:nth-child(1) .step-num { color: var(--cookie); }
+    .step:nth-child(2) .step-num { color: var(--blue); }
+    .step:nth-child(3) .step-num { color: var(--cookie); }
+
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .step p {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    /* ─── Features ─── */
+    .features {
+      padding: 6rem 0;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .feat {
+      padding: 2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      backdrop-filter: blur(8px);
+      transition: border-color 0.3s, transform 0.3s, background 0.3s;
+    }
+
+    .feat:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .feat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-bottom: 1.25rem;
+    }
+
+    .feat-dot--cookie { background: var(--cookie); }
+    .feat-dot--blue { background: var(--blue); }
+
+    .feat h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feat p {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+
+    /* ─── Privacy Banner ─── */
+    .privacy {
+      padding: 6rem 0;
+    }
+
+    .privacy-card {
+      border-radius: var(--radius);
+      padding: 3.5rem 3rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 30% 50%, var(--cookie-glow) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 50%, var(--blue-glow) 0%, transparent 50%),
+        var(--bg-card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .privacy-card h2 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .privacy-card p {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      max-width: 420px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .privacy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .pill {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--ink-soft);
+      letter-spacing: 0.02em;
+    }
+
+    .pill--cookie {
+      border-color: rgba(212, 160, 106, 0.25);
+      color: var(--cookie-light);
+    }
+
+    .pill--blue {
+      border-color: rgba(110, 184, 224, 0.2);
+      color: var(--blue-light);
+    }
+
+    /* ─── CTA ─── */
+    .cta {
+      padding: 6rem 0 8rem;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+
+    .cta p {
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      margin-bottom: 2rem;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+      background: linear-gradient(135deg, var(--cookie) 0%, var(--blue) 100%);
+      color: #fff;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 8px 24px rgba(212, 160, 106, 0.2),
+        0 8px 24px rgba(110, 184, 224, 0.15);
+    }
+
+    .cta-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--ink-soft); }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .nav-right .nav-link { display: none; }
+
+      .hero h1 { font-size: 2.2rem; }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .privacy-card {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .hero-meta {
+        flex-direction: column;
+        gap: 0.6rem;
+        align-items: center;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="../icons/icon.png" alt="Clear Site Data">
+    <span>Clear Site Data</span>
+  </a>
+  <div class="nav-right">
+    <a class="nav-link" href="https://github.com/fabiog96/clear-site-data" target="_blank" rel="noopener">GitHub</a>
+    <a class="nav-link" href="#privacy">Privacy</a>
+    <a class="nav-btn" href="https://chromewebstore.google.com/detail/ehdbjikpoiadepodjjnjbjppaphdflng" target="_blank" rel="noopener"><img class="chrome-icon" src="../icons/google.svg" alt=""> Add to Chrome</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-icon-wrap r" style="transition-delay:.1s">
+    <img class="hero-icon" src="../icons/icon.png" alt="Clear Site Data icon">
+  </div>
+  <h1 class="r" style="transition-delay:.25s">
+    Clear <span class="hl-cookie">cookies</span> &amp; storage in <span class="hl-blue">one click</span>
+  </h1>
+  <p class="hero-sub r" style="transition-delay:.4s">
+    No menus. No settings. No data collected.<br>Just click and it's gone.
+  </p>
+  <a class="hero-cta r" style="transition-delay:.55s" href="https://chromewebstore.google.com/detail/ehdbjikpoiadepodjjnjbjppaphdflng" target="_blank" rel="noopener">
+    <img class="chrome-icon" src="../icons/google.svg" alt="">
+    Add to Chrome &mdash; Free
+  </a>
+  <div class="hero-meta r" style="transition-delay:.7s">
+    <span><span class="dot dot--cookie"></span> Under 1 KB</span>
+    <span><span class="dot dot--blue"></span> Zero tracking</span>
+    <span><span class="dot dot--cookie"></span> MIT License</span>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<!-- How It Works -->
+<section class="how">
+  <div class="wrap">
+    <p class="how-label r">How it works</p>
+    <div class="steps r" style="transition-delay:.1s">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Click the icon</h3>
+        <p>In your Chrome toolbar, on any website.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Data is wiped</h3>
+        <p>Cookies and localStorage for that origin. Nothing else.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Page reloads</h3>
+        <p>Clean state. A notification confirms the action.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<!-- Features -->
+<section class="features">
+  <div class="wrap">
+    <div class="features-grid">
+      <div class="feat r" style="transition-delay:.05s">
+        <div class="feat-dot feat-dot--cookie"></div>
+        <h3>Site-Specific</h3>
+        <p>Only clears the active tab's origin. Other sessions stay untouched.</p>
+      </div>
+      <div class="feat r" style="transition-delay:.12s">
+        <div class="feat-dot feat-dot--blue"></div>
+        <h3>Incognito Ready</h3>
+        <p>Works in private windows. Enable once in Chrome settings.</p>
+      </div>
+      <div class="feat r" style="transition-delay:.19s">
+        <div class="feat-dot feat-dot--blue"></div>
+        <h3>Zero Latency</h3>
+        <p>No popup, no spinner. The API fires instantly on click.</p>
+      </div>
+      <div class="feat r" style="transition-delay:.26s">
+        <div class="feat-dot feat-dot--cookie"></div>
+        <h3>30 Lines of Code</h3>
+        <p>No dependencies. No frameworks. No background processes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<!-- Privacy -->
+<section class="privacy" id="privacy">
+  <div class="wrap">
+    <div class="privacy-card r">
+      <h2>A privacy tool that<br>actually respects your privacy.</h2>
+      <p>No analytics. No network requests. No stored data. Fully open source — audit every line.</p>
+      <div class="privacy-pills">
+        <span class="pill pill--cookie">No tracking</span>
+        <span class="pill pill--blue">No phone home</span>
+        <span class="pill pill--cookie">No stored state</span>
+        <span class="pill pill--blue">Open source</span>
+        <span class="pill">MIT licensed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider"></div>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <div class="r">
+      <h2>Stop digging through settings.</h2>
+      <p>Free, open source, under 1 KB. Install in seconds.</p>
+      <a class="cta-btn" href="https://chromewebstore.google.com/detail/ehdbjikpoiadepodjjnjbjppaphdflng" target="_blank" rel="noopener">
+        <img class="chrome-icon" src="../icons/google.svg" alt="">
+        Add to Chrome
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <span>&copy; 2026 Clear Site Data &middot; Fabio Gioia</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/fabiog96/clear-site-data" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/fabiog96/clear-site-data/blob/main/PRIVACY.md" target="_blank" rel="noopener">Privacy</a></li>
+        <li><a href="https://github.com/fabiog96/clear-site-data/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(
+    entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('v'); io.unobserve(e.target); }
+    }),
+    { threshold: 0.15, rootMargin: '0px 0px -30px 0px' }
+  );
+  document.querySelectorAll('.r').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
