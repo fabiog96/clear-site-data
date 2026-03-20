@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.2.1...clear-site-data-v1.3.0) (2026-03-20)
+
+
+### Features
+
+* add initial HTML structure and styles for the Clear Site Data application ([c54f1f2](https://github.com/fabiog96/clear-site-data/commit/c54f1f2c39a413385ca668d1743105974eb7edf8))
+* implement eraser zone with interactive canvas and hint for user guidance ([ded5228](https://github.com/fabiog96/clear-site-data/commit/ded5228f42278f27f98fb0ab595be2e643286d92))
+
 ## [1.2.1](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.2.0...clear-site-data-v1.2.1) (2026-02-13)
 
 
