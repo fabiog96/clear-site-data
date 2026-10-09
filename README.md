@@ -19,6 +19,9 @@ The extension operates entirely locally in the browser and does not collect or t
 - **Automatic Page Reload**  
   Automatically reloads the page after clearing site data.
 
+- **Optional Notifications**  
+  Right-click the extension icon and toggle **Show notifications** to turn the confirmation message on or off (off by default).
+
 - **Incognito Mode Support**  
   Works in Incognito windows (must be enabled manually in Chrome extension settings).
 
@@ -56,7 +59,13 @@ The extension requires the following permissions to function correctly:
 - **`notifications`**  
   Used only to display a local confirmation message after the operation is completed.
 
-No data is read, stored, or transmitted outside the browser.
+- **`contextMenus`**  
+  Required to add the **Show notifications** toggle to the extension icon's right-click menu.
+
+- **`storage`**  
+  Required to remember the notifications preference (synced via Chrome sync if enabled).
+
+No browsing data is read, stored, or transmitted outside the browser. The only stored value is the notifications preference.
 
 ---
 
