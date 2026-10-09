@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.4.0...clear-site-data-v1.5.0) (2026-10-09)
+
+
+### Features
+
+* ✨ add notifications on/off toggle to the action context menu ([bdd9dc8](https://github.com/fabiog96/clear-site-data/commit/bdd9dc8ac7d39ead1d4f9a3485745d8179c849ea))
+* ✨ add notifications on/off toggle to the action context menu ([8aea318](https://github.com/fabiog96/clear-site-data/commit/8aea31805e49dcbd92ec39d95af38afac1d07318))
+
 ## [1.4.0](https://github.com/fabiog96/clear-site-data/compare/clear-site-data-v1.3.0...clear-site-data-v1.4.0) (2026-03-20)
 
 
