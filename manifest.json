@@ -1,13 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Clear Site Data",
-  "version": "1.1.2",
+  "version": "1.5.0",
   "description": "A Chrome extension to clear cookies and local storage for the current site and reload the page.",
   "permissions": [
     "browsingData",
     "tabs",
     "activeTab",
-    "notifications"
+    "notifications",
+    "contextMenus",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"
